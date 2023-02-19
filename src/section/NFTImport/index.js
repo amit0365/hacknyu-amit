@@ -96,7 +96,7 @@ const Page = () => {
                                         <img src={LeafAvator} style={{width: 80, height: 80}} />
                                     </Box>
                                     <Box display="flex" alignItems={"center"}>
-                                        {money} AA
+                                        {(money).toString().substring(0,4)} AA
                                     </Box>
                                 </Box>
                                 <Box style={{fontSize: 30}} display="flex" justifyContent={'flex-start'}>
@@ -104,7 +104,7 @@ const Page = () => {
                                         <img src={HandAvator} style={{width: 80, height: 80}} />
                                     </Box>
                                     <Box display="flex" alignItems={"center"}>
-                                    {27000000000000000*money} Points
+                                    {(270*money).toString().substring(0,7)} Points
                                     </Box>
                                 </Box>
                                 

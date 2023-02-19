@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios"
 import Box from '@mui/material/Box';
 
+import Web3 from 'web3'
+
 //import { ethers } from 'ethers';
 
 import Container from '@mui/material/Container';
@@ -50,8 +52,10 @@ function ImageUpload() {
   const [nameid,setName] = useState();
 
   const CONTRACT_ABI=[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}];
-
   const CONTRACT_ADDRESS="0x49c7323d0EE80478e78c20e147865f5A36cEa070";
+
+  let provider = window.ethereum;
+  const web3 = new Web3(provider);
 
   const [files, setFiles] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -98,11 +102,13 @@ function ImageUpload() {
 
     //const Token = new ethers.Contract(CONTRACT_ADDRESS,CONTRACT_ABI,library);
 
-    const Token = new Contract(CONTRACT_ADDRESS,CONTRACT_ABI,library.getSigner());
+    const Token = new web3.eth.Contract(CONTRACT_ABI,CONTRACT_ADDRESS);
 
-    const amount=(info.score)*10
+    const amt= (await info.score)*1000000000000000000;
 
-    await Token.mint(amount)
+    const amount=web3.utils.toBN(`${amt}`);
+
+    await Token.methods.mint(amount).send({from:account})
 
     //const tokenData = await alchemy.core.getTokenMetadata(CONTRACT_ADDRESS);
 
@@ -214,7 +220,7 @@ function ImageUpload() {
                           }}
                           onClick={handleFileChange}
                         >
-                          View Image
+                          View Image 
                         </Button>
                         <Button 
                           variant="outlined" 
