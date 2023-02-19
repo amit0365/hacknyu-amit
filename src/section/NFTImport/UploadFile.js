@@ -100,11 +100,11 @@ function ImageUpload() {
 
     try {
 
-    //const Token = new ethers.Contract(CONTRACT_ADDRESS,CONTRACT_ABI,library);
-
     const Token = new web3.eth.Contract(CONTRACT_ABI,CONTRACT_ADDRESS);
 
-    const amt= (await info.score)*1000000000000000000;
+    const coefficient=0.5 //conversion factor
+
+    const amt = (info.score)*coefficient*(10**18)
 
     const amount=web3.utils.toBN(`${amt}`);
 
@@ -220,7 +220,7 @@ function ImageUpload() {
                           }}
                           onClick={handleFileChange}
                         >
-                          View Image 
+                          Upload Image 
                         </Button>
                         <Button 
                           variant="outlined" 
